@@ -7,6 +7,9 @@ import PracticeScreen from '../screens/PracticeScreen';
 import ProgressScreen from '../screens/ProgressScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import HomeScreen from '../screens/HomeScreen';
+import LessonStack from './LessonStack';
+import PracticeHistoryScreen from '../screens/practiceHistoryScreen';
+import LearningScreen from '../screens/LearningScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -33,6 +36,9 @@ export default function BottomTabs() {
                 case 'Perfil':
                   iconName = 'person';
                   break;
+                case 'Historial':
+                    iconName = 'reader-outline';
+                    break;
               }
     
               return <Ionicons name={iconName} size={size} color={color} />;
@@ -41,10 +47,12 @@ export default function BottomTabs() {
           })}
         >
           <Tab.Screen name="Inicio" component={HomeScreen} />
-          <Tab.Screen name="Lecciones" component={LessonScreen} />
+          <Tab.Screen name="Lecciones" component={LessonStack} />
           <Tab.Screen name="Práctica" component={PracticeScreen} />
           <Tab.Screen name="Progreso" component={ProgressScreen} />
           <Tab.Screen name="Perfil" component={ProfileScreen} />
+          <Tab.Screen name="Historial" component={PracticeHistoryScreen} />
+          <Tab.Screen name="Aprendizaje" component={LearningScreen} />
         </Tab.Navigator>
       );
 }

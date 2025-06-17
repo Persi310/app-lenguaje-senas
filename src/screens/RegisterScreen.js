@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { signUp } from '../config/auth';
 import AuthFormWrapper from '../components/AuthFormWrapper';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../config/firebaseConfig';
 
 export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -31,20 +33,20 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const handleRegister = async () => {
-    const validationError = validateForm();
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
-    setLoading(true);
-    setError('');
     try {
-      await signUp(email, password);
+      const userCredential = await signUp(email, password);
+      const user = userCredential.user;
+  
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        createdAt: new Date(),
+        role: 'user' 
+      });
+  
+      navigation.replace('Tabs');
+  
     } catch (err) {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
