@@ -56,7 +56,7 @@ export default function PracticeHistoryScreen() {
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text style={styles.title}>Lección: {item.lessonId}</Text>
+            <Text style={styles.title}>Lección: {item.lessonId || 'Quiz'}</Text>
             <Text>Puntaje: {item.score} / {item.totalQuestions}</Text>
             <Text>Fecha: {moment(item.createdAt?.toDate()).format('DD/MM/YYYY HH:mm')}</Text>
           </View>

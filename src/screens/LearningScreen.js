@@ -1,46 +1,88 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import senas from '../data/senas';
+import { getViewedLessons } from '../config/progress';
+import { auth } from '../config/firebaseConfig';
 
-export default function LearningScreen() {
-  const [index, setIndex] = useState(0);
-  const currentSena = senas[index];
+export default function LearningScreen({ navigation }) {
+  const [viewedLessons, setViewedLessons] = useState([]);
 
-  const handleNext = () => {
-    if (index < senas.length - 1) {
-      setIndex(index + 1);
-    } else {
-      setIndex(0); 
+  useEffect(() => {
+    const loadProgress = async () => {
+      const userId = auth.currentUser?.uid;
+      if (userId) {
+        const vistos = await getViewedLessons(userId);
+        setViewedLessons(vistos);
+      }
+    };
+
+    loadProgress();
+  }, []);
+
+  const renderItem = ({ item }) => {
+    const visto = viewedLessons.includes(item.id);
+
+    let icon = 'image-outline';
+    let color = '#2196f3';
+
+    if (item.tipo === 'video') {
+      icon = 'play-circle-outline';
+      color = '#f44336';
+    } else if (item.tipo === 'quiz') {
+      icon = 'help-circle-outline';
+      color = '#4caf50';
     }
+
+    return (
+      <TouchableOpacity
+        style={[styles.card, visto && { backgroundColor: '#e0f7fa' }]}
+        onPress={() => navigation.navigate('LessonDetail', { leccion: item })}
+      >
+        <Ionicons name={icon} size={28} color={color} />
+        <View style={{ marginLeft: 12, flex: 1 }}>
+          <Text style={styles.titulo}>{item.titulo}</Text>
+          <Text>{item.descripcion}</Text>
+          {visto && <Text style={styles.visto}>✓ Visto</Text>}
+        </View>
+      </TouchableOpacity>
+    );
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Aprende señas</Text>
-
-      <Image source={currentSena.imagen} style={styles.image} />
-
-      <Text style={styles.word}>{currentSena.palabra}</Text>
-      <Text style={styles.description}>{currentSena.descripcion}</Text>
-
-      <TouchableOpacity style={styles.button} onPress={handleNext}>
-        <Text style={styles.buttonText}>Siguiente</Text>
-      </TouchableOpacity>
+      <FlatList
+        data={senas}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, alignItems: 'center', justifyContent: 'center' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
-  image: { width: 200, height: 200, resizeMode: 'contain', marginBottom: 20 },
-  word: { fontSize: 28, fontWeight: 'bold' },
-  description: { fontSize: 18, marginTop: 10, textAlign: 'center' },
-  button: {
-    marginTop: 30,
-    backgroundColor: '#4caf50',
-    padding: 12,
-    borderRadius: 10,
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#f9f9f9',
   },
-  buttonText: { color: 'white', fontSize: 18 },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 10,
+    marginBottom: 12,
+    elevation: 3,
+  },
+  titulo: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  visto: {
+    color: 'green',
+    marginTop: 4,
+    fontWeight: 'bold',
+  },
 });

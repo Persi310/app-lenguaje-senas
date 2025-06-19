@@ -7,9 +7,19 @@ export default function HomeScreen({ navigation }) {
       <Text style={styles.title}>Pantalla de Inicio</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Aprendizaje')}
+        onPress={() => {
+          navigation.getParent()?.navigate('Aprendizaje');
+        }}
       >
         <Text style={styles.buttonText}>Aprender señas</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          navigation.getParent()?.navigate('Quiz');
+        }}
+      >
+        <Text style={styles.buttonText}>Quiz</Text>
       </TouchableOpacity>
       <Button title="Ir a Lecciones" onPress={() => navigation.navigate('Lecciones')} />
       <Button title="Ir a Práctica" onPress={() => navigation.navigate('Práctica')} />

@@ -24,14 +24,12 @@ export default function ProfileScreen({ navigation }) {
         const results = await getPracticeResults(currentUser.uid);
         setPracticeCount(results.length);
   
-        // Calcular el promedio de aciertos
         const totalCorrect = results.reduce((sum, r) => sum + (r.correctCount || r.score || 0), 0);
         const totalQuestions = results.reduce((sum, r) => sum + (r.totalCount || r.totalQuestions || 0), 0);
   
         const average = totalQuestions > 0 ? ((totalCorrect / totalQuestions) * 100).toFixed(1) : 0;
         setAccuracy(average);
   
-        // Determinar nivel
         let nivel = 'Principiante';
         if (results.length >= 5 && average >= 50) nivel = 'Intermedio';
         if (results.length >= 10 && average >= 75) nivel = 'Avanzado';
@@ -67,7 +65,7 @@ export default function ProfileScreen({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: '#2196f3', marginTop: 16 }]}
-            onPress={() => navigation.navigate('Historial')}
+            onPress={() => navigation.getParent()?.navigate('Historial')}
           >
             <Text style={styles.buttonText}>Ver historial de prácticas</Text>
           </TouchableOpacity>

@@ -26,7 +26,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {user ? <BottomTabs /> : <AuthNavigator />}
+      <AuthNavigator user={user} />
     </NavigationContainer>
   );
 }

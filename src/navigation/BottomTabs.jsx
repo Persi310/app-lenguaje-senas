@@ -10,6 +10,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LessonStack from './LessonStack';
 import PracticeHistoryScreen from '../screens/practiceHistoryScreen';
 import LearningScreen from '../screens/LearningScreen';
+import QuizScreen from '../screens/QuizScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -51,8 +52,6 @@ export default function BottomTabs() {
           <Tab.Screen name="Práctica" component={PracticeScreen} />
           <Tab.Screen name="Progreso" component={ProgressScreen} />
           <Tab.Screen name="Perfil" component={ProfileScreen} />
-          <Tab.Screen name="Historial" component={PracticeHistoryScreen} />
-          <Tab.Screen name="Aprendizaje" component={LearningScreen} />
         </Tab.Navigator>
       );
 }
